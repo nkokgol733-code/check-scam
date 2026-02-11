@@ -1,0 +1,42 @@
+<div class="section-title">🚩 GỬI TỐ CÁO CHI TIẾT</div>
+<input type="text" id="sdt_stk" placeholder="SĐT/STK kẻ lừa đảo*">
+<input type="text" id="ho_ten" placeholder="Họ tên kẻ lừa đảo">
+<input type="text" id="link_fb" placeholder="Link Facebook">
+<input type="text" id="ngan_hang" placeholder="Ngân hàng/Ví điện tử">
+<textarea id="ly_do" placeholder="Lý do/Hành vi lừa đảo*"></textarea>
+
+<label>Bằng chứng (Ảnh chụp màn hình):</label>
+<input type="file" id="fileInput" accept="image/*">
+
+<div class="section-title">👤 NGƯỜI TỐ CÁO</div>
+<input type="text" id="nguoi_to_cao" placeholder="Tên của bạn">
+<input type="text" id="sdt_nguoi_to_cao" placeholder="SĐT của bạn">
+
+<button class="btn-report" onclick="sendReport()">GỬI BÁO CÁO NGAY</button>
+<div id="status"></div>
+
+<script>
+async function sendReport() {
+    const status = document.getElementById('status');
+    const fileFile = document.getElementById('fileInput').files[0];
+    
+    const formData = new FormData();
+    formData.append('sdt_stk', document.getElementById('sdt_stk').value);
+    formData.append('ho_ten', document.getElementById('ho_ten').value);
+    formData.append('link_fb', document.getElementById('link_fb').value);
+    formData.append('ngan_hang', document.getElementById('ngan_hang').value);
+    formData.append('ly_do', document.getElementById('ly_do').value);
+    formData.append('nguoi_to_cao', document.getElementById('nguoi_to_cao').value);
+    formData.append('sdt_nguoi_to_cao', document.getElementById('sdt_nguoi_to_cao').value);
+    if(fileFile) formData.append('hinh_anh', fileFile);
+
+    status.innerText = "Đang tải ảnh và gửi dữ liệu...";
+    
+    try {
+        const res = await fetch('/report', { method: 'POST', body: formData });
+        const data = await res.json();
+        alert(data.message);
+        if(data.success) location.reload();
+    } catch (e) { alert("Lỗi hệ thống!"); }
+}
+</script>
