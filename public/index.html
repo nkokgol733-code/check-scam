@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Check Scam Pro</title>
+    <style>
+        body { background: #1a1a1a; color: white; font-family: 'Segoe UI', sans-serif; text-align: center; padding-top: 100px; }
+        .box { background: #2d2d2d; padding: 30px; border-radius: 15px; display: inline-block; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        input { padding: 12px; width: 250px; border-radius: 5px; border: none; margin-right: 10px; }
+        button { padding: 12px 25px; background: #e74c3c; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        #result { margin-top: 25px; font-size: 1.2rem; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>HỆ THỐNG CHECK SCAM</h1>
+        <input type="text" id="userInput" placeholder="Nhập SĐT hoặc STK cần check...">
+        <button onclick="check()">KIỂM TRA</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function check() {
+            const info = document.getElementById('userInput').value;
+            const resDiv = document.getElementById('result');
+            resDiv.innerHTML = "Đang kiểm tra...";
+            
+            const response = await fetch('/check', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ info })
+            });
+            const data = await response.json();
+            resDiv.innerHTML = data.isScam ? `<span style="color: #ff4757">${data.message}</span>` : `<span style="color: #2ed573">${data.message}</span>`;
+        }
+    </script>
+</body>
+</html>
